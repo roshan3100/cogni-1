@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- database properties DataSource -->
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="" />
+		<property name="url" value="" />
+		<property name="username" value="" />
+		<property name="password" value="" />
+	</bean>
+
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+
+		<!-- dependency Injection of dataSource -->
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+
+				<!-- hibernate mapping to database automatically -->
+				<!-- when we use create-drop instead of update the table is created automatically 
+					when the server runs after that it will drop when server stops -->
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+
+				<!-- whether the query wants to show the data in console -->
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.format_sql">true</prop>
+
+			</props>
+		</property>
+
+		<!-- packages to scan for Entity Classes annotated Classes package -->
+		<property name="annotatedClasses">
+			<list>
+				<value></value>
+			</list>
+		</property>
+
+	</bean>
+
+	<!-- A transaction manager is the part of an application that is responsible 
+		for coordinating transactions across one or more resources. In the Spring 
+		framework, the transaction manager is effectively the root of the transaction 
+		system. -->
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+</beans>
